@@ -5,29 +5,46 @@ import mysql.connector as mariadb
 
 
 class AgentSingleton(type):
+    """ Create object for Singleton
+    Public Attributes:
+    Public Methods:
+        __call__ : method for singleton
+    """
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
+        """ Method for Singleton
+        Args:
+        Returns:
+        Raises:
+            Native exceptions.
+        """
         if cls not in cls._instances:
             cls._instances[cls] = super(AgentSingleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
-class Agent(object):
-    __metaclass__ = AgentSingleton
+class Agent(metaclass=AgentSingleton):
+    """ Control MySQL server
+    Public Attributes:
+    Public Methods:
+        connect(db_name): Connect MySQL server with specific database
+        query_from_table(epicenter): Query from Database's table with specific key
+    """
     _host = '127.0.0.1'
     _user = 'root'
     _passwd = 'sh791114'
     _db_conn = None
     _db_cursor = None
+
     def connect(self, db_name=None):
         """ Connect to db
-            Args:
+        Args:
             db_name:    database name for db connecting
-            Returns:
-            Raises:
-            Native exceptions.
-            """
+        Returns:
+        Raises:
+        Native exceptions.
+        """
         # --> open database connection
         if db_name:
             #db_conn = mariadb.connect(self._host,
@@ -48,6 +65,13 @@ class Agent(object):
         self._db_cursor = self._db_conn.cursor()
 
     def query_from_table(self, epicenter):
+        """ Query from table
+        Args:
+            epicenter:    unique key encoded from epicenter
+        Returns:
+        Raises:
+            Native exceptions.
+        """
         query_command = "SELECT epicenter FROM earthquake WHERE epicenter = %19.4f" % epicenter
 
         print(query_command)
@@ -58,17 +82,29 @@ class Agent(object):
             print("Found the number")
             print(answer)
         else:
-            print("Not Found")
-            print(answer)
+            print("Not found")
 
 
-class Account(Agent):
+class Account(object):
+    """ Create account for table's query
+    Public Attributes:
+        name :  account's username
+    Public Methods:
+        query(epicenter) :  query MySQL table with epicenter
+    """
     name = None
     _epicenter = None
     def __init__(self, name):
         self.name = name
 
     def query(self, epicenter):
+        """ Query from table
+        Args:
+            epicenter : lon,lat,dep seperated by space
+        Returns:
+        Raises:
+            Native exceptions.
+        """
         _key = None
         self._epicenter = epicenter
 
@@ -109,7 +145,7 @@ def main():
             name_account = input('Type in the user account\'s name:')
             for account in accounts:
                 if account.name == name_account:
-                    epicenter = [float(x) for x in input('Type in the epicenter:').split()]
+                    epicenter = [float(x) for x in input('Type in the epicenter(use space to separate):').split()]
                     account.query(epicenter)
                     break
         elif option == '3':
