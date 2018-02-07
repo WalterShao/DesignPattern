@@ -145,7 +145,8 @@ def main():
             name_account = input('Type in the user account\'s name:')
             for account in accounts:
                 if account.name == name_account:
-                    epicenter = [float(x) for x in input('Type in the epicenter(use space to separate):').split()]
+                    hint = 'Type in the epicenter(use space to separate):'
+                    epicenter = [float(x) for x in input(hint).split()]
                     account.query(epicenter)
                     break
         elif option == '3':
