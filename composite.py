@@ -14,12 +14,10 @@ class Shape(object):
         del_object(name) : delete article from figure by name
         handle_object: perform article's action
     """
-    name = None
-    objects = None
-    _is_drawn = None
     def __init__(self, name):
         self.name = name
         self.objects = []
+        self._is_drawn = None
     def add_object(self, article):
         """ Add article to figure
         Args:
@@ -62,6 +60,10 @@ class Figure(Shape):
             if obj.name is name:
                 self.objects.remove(obj)
                 break
+
+    def handle_object(self):
+        for article in self.objects:
+            article.handle_object()
 
 class Circle(Shape):
     """ Class for circle
